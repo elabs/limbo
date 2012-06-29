@@ -1,8 +1,8 @@
-describe Limbo::RailsData do
+describe Limbo::Rails::Data do
   describe ".new" do
     context "non-hash argument" do
       it "raises ArgumentError" do
-        expect { Limbo::RailsData.new(nil) }.to raise_error ArgumentError
+        expect { Limbo::Rails::Data.new(nil) }.to raise_error ArgumentError
       end
     end
 
@@ -10,7 +10,7 @@ describe Limbo::RailsData do
       it "raises ArgumentError" do
         hash = { params: {}, session: {}, exception: {} }
 
-        expect { Limbo::RailsData.new(hash) }.to raise_error ArgumentError
+        expect { Limbo::Rails::Data.new(hash) }.to raise_error ArgumentError
       end
     end
 
@@ -18,8 +18,8 @@ describe Limbo::RailsData do
       it "returns an instance" do
         hash = { params: {}, session: {}, exception: {}, request: {} }
 
-        rails_data = Limbo::RailsData.new(hash)
-        rails_data.should be_instance_of(Limbo::RailsData)
+        rails_data = Limbo::Rails::Data.new(hash)
+        rails_data.should be_instance_of(Limbo::Rails::Data)
       end
     end
   end
@@ -38,7 +38,7 @@ describe Limbo::RailsData do
     before { exception.should_receive(:backtrace).exactly(1) { "backtrace" } }
 
     it "returns a transformed hash" do
-      transformed_hash = Limbo::RailsData.new(hash).transform
+      transformed_hash = Limbo::Rails::Data.new(hash).transform
       transformed_hash[:controller].should eq("c")
       transformed_hash[:action].should eq("a")
       transformed_hash[:parameters].should eq({ controller: "c",
@@ -52,7 +52,7 @@ describe Limbo::RailsData do
     it "applies filter on some keys" do
       Rails.application.config.filter_parameters = [:password, :user_id]
 
-      transformed_hash = Limbo::RailsData.new(hash).transform
+      transformed_hash = Limbo::Rails::Data.new(hash).transform
       transformed_hash[:parameters].should eq({ controller: "c",
                                                 action: "a",
                                                 password: "[FILTERED]" })
@@ -60,7 +60,7 @@ describe Limbo::RailsData do
     end
 
     it "return parameters added by user" do
-      transformed_hash = Limbo::RailsData.new(hash).transform
+      transformed_hash = Limbo::Rails::Data.new(hash).transform
       transformed_hash[:custom].should eq("I am added by the user")
     end
 

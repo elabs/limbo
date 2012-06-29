@@ -1,5 +1,5 @@
 require "limbo/version"
-require "limbo/rails_data"
+require "limbo/rails/data"
 require "limbo/client"
 
 module Limbo
@@ -12,7 +12,8 @@ module Limbo
     end
 
     def rails_post(hash)
-      post RailsData.new(hash).transform
+      transformed_hash = Rails::Data.new(hash).transform
+      post(transformed_hash)
     end
 
     def post(hash)
