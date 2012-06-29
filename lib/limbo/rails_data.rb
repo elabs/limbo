@@ -1,47 +1,33 @@
+require 'limbo/rails_parameter_filter'
+require 'limbo/rails_request'
+
 module Limbo
   class RailsData
     def initialize(hash)
-      raise ArgumentError unless hash.is_a?(Hash)
+      fail ArgumentError, 'Argument must be a hash' unless hash.is_a?(Hash)
 
-      @params = hash.fetch(:params) { fail ArgumentError }
-      @session = hash.fetch(:session) { fail ArgumentError }
-      @exception = hash.fetch(:exception) { fail ArgumentError }
-      @request = hash.fetch(:request) { fail ArgumentError }
+      message = 'Required keys are: :params, :session, :exception, :request'
+
+      @params = hash.delete(:params) { fail ArgumentError, message }
+      @session = hash.delete(:session) { fail ArgumentError, message }
+      @exception = hash.delete(:exception) { fail ArgumentError, message }
+      request = hash.delete(:request) { fail ArgumentError, message }
+      @request = Limbo::RailsRequest.new(request)
+
+      @hash = hash
     end
 
     def transform
       {
         controller:  @params[:controller],
         action:      @params[:action],
-        parameters:  filter_sensitive_parameters(@params),
-        url:         assemble_request_url,
-        session:     filter_sensitive_parameters(@session.to_hash),
-        # We must filter this better.
-        #request_env: filter_sensitive_parameters(@request.env)
+        parameters:  Limbo::RailsParameterFilter.filter(@params),
+        url:         @request.url,
+        session:     Limbo::RailsParameterFilter.filter(@session.to_hash),
+        # TODO: We must filter this better.
+        # request_env: Limbo::RailsParameterFilter.filter(@request.env)
         backtrace:    @exception.backtrace
-      }
-    end
-
-    private
-
-    def filter_sensitive_parameters(hash)
-      if hash.is_a?(Hash)
-        sensitive_parameters = Rails.application.config.filter_parameters
-        ActionDispatch::Http::ParameterFilter.new(sensitive_parameters).filter(hash)
-      else
-        hash
-      end
-    end
-
-    def assemble_request_url
-      url = "#{@request.protocol}#{@request.host}"
-
-      unless [80, 443].include?(@request.port)
-        url << ":#{@request.port}"
-      end
-
-      url << @request.fullpath
-      url
+      }.merge(@hash)
     end
   end
 end

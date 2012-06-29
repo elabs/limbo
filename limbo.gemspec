@@ -14,4 +14,8 @@ Gem::Specification.new do |gem|
   gem.name          = "limbo"
   gem.require_paths = ["lib"]
   gem.version       = Limbo::VERSION
+
+  gem.add_development_dependency "rspec"
+  gem.add_development_dependency "vcr"
+  gem.add_development_dependency "rails"
 end
