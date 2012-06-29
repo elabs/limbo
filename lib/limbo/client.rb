@@ -7,6 +7,18 @@ module Limbo
       new(hash).post
     end
 
+    def valid_data?
+      @valid_data
+    end
+
+    def posted?
+      200 == response.code.to_i
+    end
+
+    def response
+      @response
+    end
+
     def post
       headers =  { "X-LIMBO-KEY" => Limbo.key,
                    "content-type" => "application/json"}
@@ -15,10 +27,12 @@ module Limbo
 
       uri = URI(Limbo.uri)
       port = uri.port || 80
-      Net::HTTP.start(uri.host, port) do |http|
+      @response = Net::HTTP.start(uri.host, port) do |http|
         http.open_timeout = 5
         http.request(request, body)
       end
+
+      self
     end
 
     private
@@ -27,12 +41,14 @@ module Limbo
       begin
         JSON.generate(@body)
       rescue JSON::GeneratorError
+        @valid_data = false
         '{"client-error": "error generating JSON"}'
       end
     end
 
     def initialize(body)
       @body = body
+      @valid_data = true
     end
   end
 end
