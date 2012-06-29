@@ -1,5 +1,6 @@
 require 'limbo'
 require 'rails/all'
+require 'vcr'
 
 module Dummy
   class Application < Rails::Application
@@ -14,6 +15,12 @@ Dummy::Application.initialize!
 
 RSpec.configure do |config|
   config.fail_fast = true
+  config.extend VCR::RSpec::Macros
+end
+
+VCR.configure do |config|
+  config.cassette_library_dir = 'spec/cassettes'
+  config.hook_into :fakeweb
 end
 
 def request(options = {})

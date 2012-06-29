@@ -7,6 +7,8 @@ describe Limbo do
   end
 
   describe ".post" do
+    use_vcr_cassette 'limbo.post'
+
     it "returns a valid Client object" do
       client = Limbo.post(a: "b")
       client.should be_valid_data
@@ -15,6 +17,8 @@ describe Limbo do
   end
 
   describe ".rails_post" do
+    use_vcr_cassette 'limbo.rails_post'
+
     before do
       rails_data = double("rails_data")
       rails_data.should_receive(:transform).and_return({ a: "b" })
