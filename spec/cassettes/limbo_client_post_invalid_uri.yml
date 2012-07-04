@@ -10,7 +10,7 @@ http_interactions:
       x-limbo-key:
       - test-key
       content-type:
-      - application/json
+      - application/json;charset=utf-8
       accept:
       - ! '*/*'
       user-agent:
@@ -32,5 +32,5 @@ http_interactions:
       encoding: US-ASCII
       string: ''
     http_version: '1.0'
-  recorded_at: Fri, 29 Jun 2012 15:17:12 GMT
+  recorded_at: Wed, 04 Jul 2012 11:12:57 GMT
 recorded_with: VCR 2.2.2

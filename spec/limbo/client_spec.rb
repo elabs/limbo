@@ -15,15 +15,23 @@ describe Limbo::Client do
   end
 
   describe "#valid_data?" do
-
     context "valid data" do
       specify { Limbo::Client.post(data: "info").should be_valid_data }
     end
 
     context "invalid data" do
-      use_vcr_cassette 'limbo.client.post.invalid_data'
 
-      specify { Limbo::Client.post("info").should_not be_valid_data }
+      context "string argument" do
+        use_vcr_cassette 'limbo.client.post.string_argument', exclusive: true
+        specify { Limbo::Client.post("info").should_not be_valid_data }
+      end
+
+      context "bad character" do
+        use_vcr_cassette 'limbo.client.post.bad_character', exclusive: true
+        specify do
+          Limbo::Client.post(data: "bad\x80char").should_not be_valid_data
+        end
+      end
     end
   end
 
@@ -33,7 +41,7 @@ describe Limbo::Client do
     end
 
     context "invalid uri" do
-      use_vcr_cassette 'limbo.client.post.invalid_uri'
+      use_vcr_cassette 'limbo.client.post.invalid_uri', exclusive: true
 
       before do
         Limbo.configure do |config|
