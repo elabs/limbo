@@ -51,5 +51,12 @@ describe Limbo::Client do
 
       specify { Limbo::Client.post(data: "info").should_not be_posted }
     end
+
+    context "invalid body" do
+      use_vcr_cassette 'limbo.client.post.bad_character', exclusive: true
+      specify do
+        Limbo::Client.post(data: "bad\x80char").should be_posted
+      end
+    end
   end
 end
