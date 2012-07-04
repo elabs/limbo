@@ -6,9 +6,14 @@ Gem::Specification.new do |gem|
   gem.email         = ["dev+ankor+unders@elabs.se"]
   gem.description   = %q{Limbo exception client.}
   gem.summary       = %q{Limbo client post exception to the Limbo exception service.}
-  gem.homepage      = ""
+  gem.homepage      = "https://github.com/elabs/limbo"
 
-  gem.files         = `git ls-files`.split($\)
+  gem.files         = Dir.glob("{bin,lib,spec}/**/*") + %w[.gemtest
+                                                           Gemfile
+                                                           LICENSE
+                                                           README.md
+                                                           Rakefile
+                                                           limbo.gemspec]
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = "limbo"
