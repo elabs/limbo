@@ -35,7 +35,10 @@ describe Limbo::Rails::Data do
         custom:     "I am added by the user"
       }
     end
-    before { exception.should_receive(:backtrace).exactly(1) { "backtrace" } }
+    before do
+      exception.should_receive(:backtrace).exactly(1) { "backtrace" }
+      exception.should_receive(:message).exactly(1) { "exception_message" }
+    end
 
     it "returns a transformed hash" do
       transformed_hash = Limbo::Rails::Data.new(hash).transform
@@ -47,6 +50,7 @@ describe Limbo::Rails::Data do
       transformed_hash[:url].should eq("http://example.com/blog")
       transformed_hash[:session].should eq({user_id: "2"})
       transformed_hash[:backtrace].should eq("backtrace")
+      transformed_hash[:exception_message].should eq("exception_message")
     end
 
     it "applies filter on some keys" do

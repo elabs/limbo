@@ -27,7 +27,8 @@ module Limbo
           session:     Limbo::Rails::ParameterFilter.filter(@session.to_hash),
           # TODO: We must filter this better.
           # request_env: Limbo::RailsParameterFilter.filter(@request.env)
-          backtrace:    @exception.backtrace
+          backtrace:    @exception.backtrace,
+          exception_message: @exception.message
         }.merge(@hash)
       end
     end
