@@ -16,6 +16,23 @@ Or install it yourself as:
 
     $ gem install limbo
 
+## Compatibility
+
+Ruby version 1.9.2 and 1.9.3
+
+[GemTesters](http://test.rubygems.org/gems/limbo) has
+ more information on which platforms limbo is tested.
+
+
+## Test
+
+    gem install rubygems-test
+    gem test limbo
+
+
+For more info see: [GemTesters](http://test.rubygems.org/)
+
+
 ## Usage
 
 TODO: Write usage instructions here
