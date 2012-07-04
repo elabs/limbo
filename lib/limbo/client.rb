@@ -21,7 +21,7 @@ module Limbo
 
     def post
       headers =  { "X-LIMBO-KEY" => Limbo.key,
-                   "content-type" => "application/json"}
+                   "content-type" => "application/json;charset=utf-8"}
       path = '/log'
       request = Net::HTTP::Post.new(path, headers)
 
@@ -39,10 +39,12 @@ module Limbo
 
     def body
       begin
-        JSON.generate(@body)
-      rescue JSON::GeneratorError
+        JSON.generate(@body).encode("UTF-8", invalid: :replace, undef: :replace)
+      rescue => e
         @valid_data = false
-        '{"client-error": "error generating JSON"}'
+        %Q|{"client-error": "error generating JSON",
+            "message": #{e.message.inspect},
+            "backtrace": "#{e.backtrace.join('\n')}"}|
       end
     end
 
