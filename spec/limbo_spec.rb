@@ -3,6 +3,8 @@ describe Limbo do
     Limbo.configure do |config|
       config.key = "test-key"
       config.uri = "http://limbo-listener-staging.herokuapp.com"
+      config.environment = "test"
+      config.service = "worker"
     end
   end
 
@@ -13,6 +15,13 @@ describe Limbo do
       client = Limbo.post(a: "b")
       client.should be_valid_data
       client.should be_posted
+    end
+
+    it "adds default parameters" do
+      expected = {:environment=>"test", :service=> "worker", :l=>"k"}
+      Limbo::Client.should_receive(:post).with(expected)
+
+      Limbo.post({l: "k"})
     end
   end
 
