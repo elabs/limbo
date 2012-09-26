@@ -21,7 +21,7 @@ module Limbo
 
     def post
       headers =  { "X-LIMBO-KEY" => Limbo.key,
-                   "content-type" => "application/json;charset=utf-8"}
+                   "content-type" => "application/json;charset=utf-8" }
       path = '/log'
       request = Net::HTTP::Post.new(path, headers)
 
